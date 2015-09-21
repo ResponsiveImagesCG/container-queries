@@ -29,6 +29,74 @@ Introduction {#intro}
 
 Limiting breakpoints to viewport size fundamentally conflicts with the goal of creating modular page components, often requiring a number of redundant CSS rules and complex exception cases spanning multiple viewport-based breakpoints. This problem is compounded depending on how dramatically a module adapts at each of its breakpoints. Once viewport-based breakpoints have been tuned to suit the limited and predictable number of contexts a module might occupy, adjustments to styling elsewhere on the page (layout, width, padding/margins, etc.) may cause a need to revisit a module’s viewport-based breakpoints completely, as those styles are disconnected from the context of the module itself.
 
+Assume the following layout pattern:
+
+```css
+@media( min-width: 600px ) {
+	.col-ab div {
+		float: left;
+		width: 50%;
+	}
+	.col-ab div:nth-of-type( odd ) {
+		clear: left;
+	}
+}
+```
+
+```html
+<body>
+	<div class="col-ab">
+		<div></div>
+		<div></div>
+	</div>
+</body>
+```
+
+While useful at the viewport level…
+
+[screenshot]
+
+```html
+<body>
+	<div class="col-ab">
+		<div class="col-ab">
+			<div></div>
+			<div></div>
+		</div>
+		<div>
+		</div>
+	</div>
+</body>
+```
+
+```css
+@media( min-width: 600px ) {
+	.col-ab div {
+		float: left;
+		width: 50%;
+	}
+	.col-ab .col-ab {
+		float: none;
+		width: auto;
+	}
+	.col-ab div:nth-of-type( odd ) {
+		clear: left;
+	}
+}
+@media( min-width: 600px ) {
+	.col-ab .col-ab div {
+		float: left;
+		width: 50%;
+	}
+	.col-ab div:nth-of-type( odd ) {
+		clear: left;
+	}
+}
+```
+
+
+
+
 ## When to use Container Queries ## {#when-to-use}
 
 	Container queries are intended for use when…
